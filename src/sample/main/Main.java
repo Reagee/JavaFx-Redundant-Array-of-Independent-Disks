@@ -1,16 +1,12 @@
 package sample.main;
 
 import javafx.application.Application;
-import javafx.css.Style;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
@@ -18,6 +14,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import sample.raid.Error;
 import sample.raid.FileOpener;
+
+import javax.swing.text.StyledDocument;
 
 public class Main extends Application {
 
@@ -47,9 +45,8 @@ public class Main extends Application {
         return true;
     }
 
-    private void colorBadBits(String error){
+    private void colorBits(String error){
         String temp = inputData.getText();
-        char[] outputMergedArr = outputMerged.getText().toCharArray();
 
         int j = 0;
         int k = 0;
@@ -58,6 +55,10 @@ public class Main extends Application {
 
             }
         }
+    }
+
+    private void colorParityBits(String error){
+
     }
 
     public Main(){

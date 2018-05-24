@@ -33,7 +33,7 @@ public class Error {
 
         int val = (int)Math.random()%2;
 
-        for(int i = 0;i < arr.length; i++){
+        for(int i = 0;i < arr.length/2; i++){
             if(val == 1){
                 output += arr[i*2];
                 if(arr[i*2+val] == '0')

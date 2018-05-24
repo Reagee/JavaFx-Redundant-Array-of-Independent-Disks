@@ -10,7 +10,7 @@ public class FileOpener {
     private String dataOne;
     private String dataTwo;
     private String bit;
-    private String input="1100110011010110";
+    private String input="1101101000101101";
 
     public FileOpener(){
         save(input);
@@ -52,6 +52,8 @@ public class FileOpener {
             dataOne = inDataOne.readLine();
             dataTwo = inDataTwo.readLine();
             bit = bits.readLine();
+
+            merge(dataOne,dataTwo);
 
             bits.close();
             inDataOne.close();
@@ -178,6 +180,8 @@ public class FileOpener {
     private void merge(String dataOne, String dataTwo){
         char[] valuesOne = dataOne.toCharArray();
         char[] valuesTwo = dataTwo.toCharArray();
+
+        data="";
 
         for(int i = 0;i < valuesOne.length;i++){
             data+=valuesOne[i];
