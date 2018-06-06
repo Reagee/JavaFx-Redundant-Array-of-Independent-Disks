@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import sample.raid.Error;
 import sample.raid.FileOpener;
 
-import javax.swing.text.StyledDocument;
+import java.util.Random;
 
 public class Main extends Application {
 
@@ -30,6 +30,7 @@ public class Main extends Application {
     private Button reverseArr = new Button("Odwróć bity losowego dysku");
     private Button changeMultipleBits = new Button("Zmień kilka bitów");
     private Button confirm = new Button("Potwierdź");
+    private Button getFromFiles = new Button("Nadpisz dane gotowymi");
 
     private TextArea input = new TextArea("");
     private TextArea outputMerged = new TextArea("");
@@ -37,28 +38,14 @@ public class Main extends Application {
     private TextArea matrixTwo = new TextArea("");
     private TextArea parityBits = new TextArea("");
 
+    private Error errors = new Error();
+
     private Boolean checkInputData(){
         for(int i = 0;i < input.getText().length(); i++){
             if(input.getText().charAt(i) != '0' && input.getText().charAt(i) != '1')
                 return false;
         }
         return true;
-    }
-
-    private void colorBits(String error){
-        String temp = inputData.getText();
-
-        int j = 0;
-        int k = 0;
-        for(int i=0;i<error.length();i++){
-            if(input.getText().charAt(i) != error.charAt(i)){
-
-            }
-        }
-    }
-
-    private void colorParityBits(String error){
-
     }
 
     public Main(){
@@ -77,12 +64,47 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 input.setEditable(false);
-                Error errors = new Error();
-                if(checkInputData()){
-                    outputMerged.setText("");
-                    matrixOne.setText("");
-                    matrixTwo.setText("");
+                if(!checkInputData()){
+                    input.setText(fileOpener.getData());
+                    outputMerged.setText("Podaj tylko bity");
+                }
+                else {
+                    fileOpener.generateResult(input.getText(), matrixOne.getText(), matrixTwo.getText(), parityBits.getText(), errors.damagedBit);
+                }
+            }
+        });
 
+        changeRandomBit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                input.setText(errors.changeRandomBit(input.getText()));
+            }
+        });
+
+        reverseArr.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Random gen = new Random();
+                int i = gen.nextInt(2)+1;
+                System.out.println(i);
+                if(i==1 && !matrixOne.getText().equals(null) && !matrixOne.getText().isEmpty())
+                    matrixOne.setText(errors.rotateArr(matrixOne.getText()));
+                else if(i==2 && !matrixTwo.getText().equals(null) && !matrixTwo.getText().isEmpty())
+                    matrixTwo.setText(errors.rotateArr(matrixTwo.getText()));
+                else if(i==1 && (matrixOne.getText().equals(null) || matrixOne.getText().isEmpty())){
+                    matrixOne.setText("Brak danych w dysku nr.1");
+                }
+                else if(i==2 && (matrixTwo.getText().equals(null) || matrixTwo.getText().isEmpty())){
+                    matrixTwo.setText("Brak danych w dysku nr.2");
+                }
+            }
+        });
+
+        getFromFiles.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                input.setEditable(false);
+                if(checkInputData()){
                     fileOpener.readData();
 
                     input.setText(fileOpener.getData());
@@ -94,48 +116,6 @@ public class Main extends Application {
                     input.setText(fileOpener.getData());
                     outputMerged.setText("Podaj tylko bity");
                 }
-
-                fileOpener.generateResult(input.getText(),matrixOne.getText(),matrixTwo.getText(),parityBits.getText(),errors.damagedBit);
-            }
-        });
-
-        changeRandomBit.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                outputMerged.setText("");
-                matrixOne.setText("");
-                matrixTwo.setText("");
-
-                Error errors = new Error();
-                String temp = input.getText();
-
-                input.setText(errors.changeRandomBit(temp));
-                fileOpener.readData();
-                input.setText(fileOpener.getData());
-
-                parityBits.setText("");
-
-                fileOpener.generateResult(input.getText(),matrixOne.getText(),matrixTwo.getText(),parityBits.getText(),errors.damagedBit);
-            }
-        });
-
-        reverseArr.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                outputMerged.setText("");
-                matrixOne.setText("");
-                matrixTwo.setText("");
-
-                Error errors = new Error();
-                String temp = input.getText();
-
-                input.setText(errors.rotateArr(temp));
-                fileOpener.readData();
-                input.setText(fileOpener.getData());
-
-                parityBits.setText("");
-
-                fileOpener.generateResult(input.getText(),matrixOne.getText(),matrixTwo.getText(),parityBits.getText(),errors.damagedBit);
             }
         });
     }
@@ -173,11 +153,14 @@ public class Main extends Application {
         changeMultipleBits.setPrefHeight(30);
         confirm.setPrefWidth(400);
         confirm.setPrefHeight(30);
+        getFromFiles.setPrefWidth(400);
+        getFromFiles.setPrefHeight(30);
 
         changeRandomBit.setFont(Font.font("Arial",15));
         reverseArr.setFont(Font.font("Arial",15));
         changeMultipleBits.setFont(Font.font("Arial",15));
         confirm.setFont(Font.font("Arial",15));
+        getFromFiles.setFont(Font.font("Arial",15));
 
         primaryStage.setTitle("RAID");
         GridPane raid = new GridPane();
@@ -201,6 +184,7 @@ public class Main extends Application {
         raid.add(reverseArr,2,9);
         raid.add(changeMultipleBits,1,10);
         raid.add(confirm,2,10);
+        raid.add(getFromFiles,3,9);
 
         Scene scene = new Scene(raid,800,420);
         primaryStage.setScene(scene);
