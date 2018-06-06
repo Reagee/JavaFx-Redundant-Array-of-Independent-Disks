@@ -20,7 +20,7 @@ import javax.swing.text.StyledDocument;
 public class Main extends Application {
 
     private Label title = new Label("Tablice dysków nadmiarowych");
-    private Label title2 = new Label("RAID");
+    private Label title2 = new Label("RAID 3");
     private Label inputData = new Label("Dane wejściowe");
     private Label outputData = new Label("Dane wyjściowe po operacji MERGE");
     private Label singleData = new Label("Dane podzielone na macierze RAID");
@@ -82,14 +82,19 @@ public class Main extends Application {
                     outputMerged.setText("");
                     matrixOne.setText("");
                     matrixTwo.setText("");
+
                     fileOpener.readData();
+
                     input.setText(fileOpener.getData());
+                    matrixOne.setText(fileOpener.getDataOne());
+                    matrixTwo.setText(fileOpener.getDataTwo());
+                    parityBits.setText(fileOpener.getBit());
+                    outputMerged.setText(fileOpener.getData());
                 }else{
                     input.setText(fileOpener.getData());
                     outputMerged.setText("Podaj tylko bity");
                 }
 
-                parityBits.setText("");
                 fileOpener.generateResult(input.getText(),matrixOne.getText(),matrixTwo.getText(),parityBits.getText(),errors.damagedBit);
             }
         });
