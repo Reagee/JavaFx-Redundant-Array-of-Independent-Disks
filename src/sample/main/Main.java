@@ -186,7 +186,7 @@ public class Main extends Application {
         raid.add(confirm,2,10);
         raid.add(getFromFiles,3,9);
 
-        Scene scene = new Scene(raid,800,420);
+        Scene scene = new Scene(raid,1200,420);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

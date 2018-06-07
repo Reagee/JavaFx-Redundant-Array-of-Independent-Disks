@@ -112,7 +112,7 @@ public class FileOpener {
         }
 
         try {
-            char[] inputArr = input.toCharArray();
+            char[] inputArr = data.toCharArray();
 
             BufferedWriter outDataOneFile = new BufferedWriter(new FileWriter(fileOnePath));
             System.out.println("Zapisano plik: " + fileOnePath);
@@ -122,38 +122,16 @@ public class FileOpener {
             System.out.println("Zapisano plik: " + bitFilePath);
 
             for (int i = 0; i < inputArr.length / 16; i++) {
-                outDataOneFile.write(inputArr[i * 16 + 0]);
-                outDataOneFile.write(inputArr[i * 16 + 1]);
-                outDataOneFile.write(inputArr[i * 16 + 2]);
-                outDataOneFile.write(inputArr[i * 16 + 3]);
-                outDataOneFile.write(inputArr[i * 16 + 4]);
-                outDataOneFile.write(inputArr[i * 16 + 5]);
-                outDataOneFile.write(inputArr[i * 16 + 6]);
-                outDataOneFile.write(inputArr[i * 16 + 7]);
-                outDataTwoFile.write(inputArr[i * 16 + 8]);
-                outDataTwoFile.write(inputArr[i * 16 + 9]);
-                outDataTwoFile.write(inputArr[i * 16 + 10]);
-                outDataTwoFile.write(inputArr[i * 16 + 11]);
-                outDataTwoFile.write(inputArr[i * 16 + 12]);
-                outDataTwoFile.write(inputArr[i * 16 + 13]);
-                outDataTwoFile.write(inputArr[i * 16 + 14]);
-                outDataTwoFile.write(inputArr[i * 16 + 15]);
-                char xorBit0 = xor(inputArr[i * 16 + 0], inputArr[i * 16 + 8]);
-                char xorBit1 = xor(inputArr[i * 16 + 1], inputArr[i * 16 + 9]);
-                char xorBit2 = xor(inputArr[i * 16 + 2], inputArr[i * 16 + 10]);
-                char xorBit3 = xor(inputArr[i * 16 + 3], inputArr[i * 16 + 11]);
-                char xorBit4 = xor(inputArr[i * 16 + 4], inputArr[i * 16 + 12]);
-                char xorBit5 = xor(inputArr[i * 16 + 5], inputArr[i * 16 + 13]);
-                char xorBit6 = xor(inputArr[i * 16 + 6], inputArr[i * 16 + 14]);
-                char xorBit7 = xor(inputArr[i * 16 + 7], inputArr[i * 16 + 15]);
-                outParityBitFile.write(xorBit0);
-                outParityBitFile.write(xorBit1);
-                outParityBitFile.write(xorBit2);
-                outParityBitFile.write(xorBit3);
-                outParityBitFile.write(xorBit4);
-                outParityBitFile.write(xorBit5);
-                outParityBitFile.write(xorBit6);
-                outParityBitFile.write(xorBit7);
+                int j;
+                char xorBit;
+                for(j = 0; j < 8; j++) {
+                    outDataOneFile.write(inputArr[i * 16 + j]);
+                    xorBit = xor(inputArr[i * 16 + j], inputArr[i * 16 + 8 + j]);
+                    outParityBitFile.write(xorBit);
+                }
+                for(j = 8; j < 16; j++)
+                    outDataTwoFile.write(inputArr[i * 16 + j]);
+
             }
 
 //            if (inputArr.length % 16 != 0)
@@ -212,23 +190,10 @@ public class FileOpener {
         data = "";
 
         for (int i = 0; i < valuesOne.length/8; i++) {
-            data += valuesOne[i+0];
-            data += valuesOne[i+1];
-            data += valuesOne[i+2];
-            data += valuesOne[i+3];
-            data += valuesOne[i+4];
-            data += valuesOne[i+5];
-            data += valuesOne[i+6];
-            data += valuesOne[i+7];
-
-            data += valuesTwo[i+0];
-            data += valuesTwo[i+1];
-            data += valuesTwo[i+2];
-            data += valuesTwo[i+3];
-            data += valuesTwo[i+4];
-            data += valuesTwo[i+5];
-            data += valuesTwo[i+6];
-            data += valuesTwo[i+7];
+            for(int j = 0; j < 8; j++)
+                data += valuesOne[i+j];
+            for(int j = 0; j < 8; j++)
+                data += valuesTwo[i+j];
         }
 
 //        if (valuesOne.length != valuesTwo.length)
