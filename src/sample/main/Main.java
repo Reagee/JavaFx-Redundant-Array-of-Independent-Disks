@@ -12,7 +12,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import sample.raid.Error;
+import sample.raid.BitsManipulator;
 import sample.raid.FileOpener;
 
 import java.util.Random;
@@ -29,7 +29,7 @@ public class Main extends Application {
     private Button changeRandomBit = new Button("Zamień 1 losowy bit");
     private Button reverseArr = new Button("Odwróć bity losowego dysku");
     private Button changeMultipleBits = new Button("Zmień kilka bitów");
-    private Button confirm = new Button("Potwierdź");
+    private Button generateReportToFile = new Button("Generuj raport do pliku");
     private Button getFromFiles = new Button("Nadpisz dane gotowymi");
 
     private TextArea input = new TextArea("");
@@ -38,7 +38,7 @@ public class Main extends Application {
     private TextArea matrixTwo = new TextArea("");
     private TextArea parityBits = new TextArea("");
 
-    private Error errors = new Error();
+    private BitsManipulator errors = new BitsManipulator();
 
     private Boolean checkInputData(){
         for(int i = 0;i < input.getText().length(); i++){
@@ -50,8 +50,8 @@ public class Main extends Application {
 
     public Main(){
         FileOpener fileOpener = new FileOpener();
-        input.setText(fileOpener.getData());
-        parityBits.setText(fileOpener.getBit());
+        input.setText(fileOpener.getDataOutput());
+        parityBits.setText(fileOpener.getParityBits());
 
         changeMultipleBits.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -60,12 +60,12 @@ public class Main extends Application {
             }
         });
 
-        confirm.setOnAction(new EventHandler<ActionEvent>() {
+        generateReportToFile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 input.setEditable(false);
                 if(!checkInputData()){
-                    input.setText(fileOpener.getData());
+                    input.setText(fileOpener.getDataOutput());
                     outputMerged.setText("Podaj tylko bity");
                 }
                 else {
@@ -107,13 +107,13 @@ public class Main extends Application {
                 if(checkInputData()){
                     fileOpener.readData();
 
-                    input.setText(fileOpener.getData());
+                    input.setText(fileOpener.getDataOutput());
                     matrixOne.setText(fileOpener.getDataOne());
                     matrixTwo.setText(fileOpener.getDataTwo());
-                    parityBits.setText(fileOpener.getBit());
-                    outputMerged.setText(fileOpener.getData());
+                    parityBits.setText(fileOpener.getParityBits());
+                    outputMerged.setText(fileOpener.getDataOutput());
                 }else{
-                    input.setText(fileOpener.getData());
+                    input.setText(fileOpener.getDataOutput());
                     outputMerged.setText("Podaj tylko bity");
                 }
             }
@@ -151,15 +151,15 @@ public class Main extends Application {
         reverseArr.setPrefHeight(30);
         changeMultipleBits.setPrefWidth(400);
         changeMultipleBits.setPrefHeight(30);
-        confirm.setPrefWidth(400);
-        confirm.setPrefHeight(30);
+        generateReportToFile.setPrefWidth(400);
+        generateReportToFile.setPrefHeight(30);
         getFromFiles.setPrefWidth(400);
         getFromFiles.setPrefHeight(30);
 
         changeRandomBit.setFont(Font.font("Arial",15));
         reverseArr.setFont(Font.font("Arial",15));
         changeMultipleBits.setFont(Font.font("Arial",15));
-        confirm.setFont(Font.font("Arial",15));
+        generateReportToFile.setFont(Font.font("Arial",15));
         getFromFiles.setFont(Font.font("Arial",15));
 
         primaryStage.setTitle("RAID");
@@ -183,10 +183,10 @@ public class Main extends Application {
         raid.add(changeRandomBit,1,9);
         raid.add(reverseArr,2,9);
         raid.add(changeMultipleBits,1,10);
-        raid.add(confirm,2,10);
+        raid.add(generateReportToFile,2,10);
         raid.add(getFromFiles,3,9);
 
-        Scene scene = new Scene(raid,800,420);
+        Scene scene = new Scene(raid,1200,420);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

@@ -6,11 +6,11 @@ import java.nio.file.Paths;
 
 public class FileOpener {
 
-    private String data;
+    private String input = "1001001010101100";
     private String dataOne;
     private String dataTwo;
-    private String bit;
-    private String input = "1001001010101100";
+    private String parityBits;
+    private String dataOutput;
 
     public FileOpener() {
         save(input);
@@ -20,9 +20,9 @@ public class FileOpener {
     public void readData() {
         String user = System.getProperty("user.name");
         String absPath = "C:/Users/" + user + "/Desktop/Raid";
-        String fileOnePath = absPath + "/DanePierwsze.txt";
-        String fileTwoPath = absPath + "/DaneDrugie.txt";
-        String bitFilePath = absPath + "/Bits.txt";
+        String fileOnePath = absPath + "/DyskPierwszy.txt";
+        String fileTwoPath = absPath + "/DyskDrugi.txt";
+        String bitFilePath = absPath + "/DyskZBitamiParzystosci.txt";
 
         if (!Files.exists(Paths.get(absPath))) {
             System.out.println("Nie można odnaleźć katalogu: " + absPath);
@@ -51,7 +51,7 @@ public class FileOpener {
 
             dataOne = inDataOne.readLine();
             dataTwo = inDataTwo.readLine();
-            bit = bits.readLine();
+            parityBits = bits.readLine();
 
             merge(dataOne, dataTwo);
 
@@ -94,9 +94,9 @@ public class FileOpener {
     private void save(String data) {
         String user = System.getProperty("user.name");
         String absPath = "C:/Users/" + user + "/Desktop/Raid";
-        String fileOnePath = absPath + "/DanePierwsze.txt";
-        String fileTwoPath = absPath + "/DaneDrugie.txt";
-        String bitFilePath = absPath + "/Bits.txt";
+        String fileOnePath = absPath + "/DyskPierwszy.txt";
+        String fileTwoPath = absPath + "/DyskDrugi.txt";
+        String bitFilePath = absPath + "/DyskZBitamiParzystosci.txt";
 
         if (!Files.exists(Paths.get(absPath))) {
             createDir(absPath);
@@ -112,48 +112,22 @@ public class FileOpener {
         }
 
         try {
-            char[] inputArr = input.toCharArray();
+            char[] inputArr = data.toCharArray();
 
             BufferedWriter outDataOneFile = new BufferedWriter(new FileWriter(fileOnePath));
-            System.out.println("Zapisano plik: " + fileOnePath);
             BufferedWriter outDataTwoFile = new BufferedWriter(new FileWriter(fileTwoPath));
-            System.out.println("Zapisano plik: " + fileTwoPath);
             BufferedWriter outParityBitFile = new BufferedWriter(new FileWriter(bitFilePath));
-            System.out.println("Zapisano plik: " + bitFilePath);
 
             for (int i = 0; i < inputArr.length / 16; i++) {
-                outDataOneFile.write(inputArr[i * 16 + 0]);
-                outDataOneFile.write(inputArr[i * 16 + 1]);
-                outDataOneFile.write(inputArr[i * 16 + 2]);
-                outDataOneFile.write(inputArr[i * 16 + 3]);
-                outDataOneFile.write(inputArr[i * 16 + 4]);
-                outDataOneFile.write(inputArr[i * 16 + 5]);
-                outDataOneFile.write(inputArr[i * 16 + 6]);
-                outDataOneFile.write(inputArr[i * 16 + 7]);
-                outDataTwoFile.write(inputArr[i * 16 + 8]);
-                outDataTwoFile.write(inputArr[i * 16 + 9]);
-                outDataTwoFile.write(inputArr[i * 16 + 10]);
-                outDataTwoFile.write(inputArr[i * 16 + 11]);
-                outDataTwoFile.write(inputArr[i * 16 + 12]);
-                outDataTwoFile.write(inputArr[i * 16 + 13]);
-                outDataTwoFile.write(inputArr[i * 16 + 14]);
-                outDataTwoFile.write(inputArr[i * 16 + 15]);
-                char xorBit0 = xor(inputArr[i * 16 + 0], inputArr[i * 16 + 8]);
-                char xorBit1 = xor(inputArr[i * 16 + 1], inputArr[i * 16 + 9]);
-                char xorBit2 = xor(inputArr[i * 16 + 2], inputArr[i * 16 + 10]);
-                char xorBit3 = xor(inputArr[i * 16 + 3], inputArr[i * 16 + 11]);
-                char xorBit4 = xor(inputArr[i * 16 + 4], inputArr[i * 16 + 12]);
-                char xorBit5 = xor(inputArr[i * 16 + 5], inputArr[i * 16 + 13]);
-                char xorBit6 = xor(inputArr[i * 16 + 6], inputArr[i * 16 + 14]);
-                char xorBit7 = xor(inputArr[i * 16 + 7], inputArr[i * 16 + 15]);
-                outParityBitFile.write(xorBit0);
-                outParityBitFile.write(xorBit1);
-                outParityBitFile.write(xorBit2);
-                outParityBitFile.write(xorBit3);
-                outParityBitFile.write(xorBit4);
-                outParityBitFile.write(xorBit5);
-                outParityBitFile.write(xorBit6);
-                outParityBitFile.write(xorBit7);
+                int j;
+                char xorBit;
+                for(j = 0; j < 8; j++) {
+                    outDataOneFile.write(inputArr[i * 16 + j]);
+                    xorBit = xor(inputArr[i * 16 + j], inputArr[i * 16 + 8 + j]);
+                    outParityBitFile.write(xorBit);
+                }
+                for(j = 8; j < 16; j++)
+                    outDataTwoFile.write(inputArr[i * 16 + j]);
             }
 
 //            if (inputArr.length % 16 != 0)
@@ -163,6 +137,10 @@ public class FileOpener {
             outDataTwoFile.close();
             outParityBitFile.close();
 
+            System.out.println("Zapisano plik: " + fileOnePath);
+            System.out.println("Zapisano plik: " + fileTwoPath);
+            System.out.println("Zapisano plik: " + bitFilePath);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -170,7 +148,7 @@ public class FileOpener {
         }
     }
 
-    public void generateResult(String input, String discOne, String discTwo, String bits, String errors) {
+    public void generateResult(String input, String discOne, String discTwo, String parityBits, String errors) {
 
         String user = System.getProperty("user.name");
         String absPath = "C:/Users/" + user + "/Desktop/RAID";
@@ -187,9 +165,9 @@ public class FileOpener {
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(filePath));
             //mergeData
-            out.write("Wejście: " + input + "    Dysk nr.1: " + dataOne + "    Dysk nr.2: " + dataTwo + "\r\n");
-            out.write("Wyjście: " + data + "    Dysk nr.2: " + discOne + "    Dysk nr.2: " + discTwo + "\r\n");
-            out.write("Bity parzystości: " + bits + "\r\n");
+            out.write("Wejście:   Dane startowe: " + input + "\r\n");
+            out.write("RAID 3:    Dysk nr.1: " + discOne + "    Dysk nr.2: " + discTwo + "    Bity parzystości: " + parityBits + "\r\n");
+            out.write("Wyjście:   Dane po połączeniu: " + dataOutput + "\r\n");
 
             if (!dataOne.equals(discOne) && !dataTwo.equals(discTwo))
                 out.write(errors + " uszkodzony dysk nr.1 oraz nr.2");
@@ -206,43 +184,20 @@ public class FileOpener {
     }
 
     private void merge(String dataOne, String dataTwo) {
-        char[] valuesOne = dataOne.toCharArray();
-        char[] valuesTwo = dataTwo.toCharArray();
-
-        data = "";
-
-        for (int i = 0; i < valuesOne.length/8; i++) {
-            data += valuesOne[i+0];
-            data += valuesOne[i+1];
-            data += valuesOne[i+2];
-            data += valuesOne[i+3];
-            data += valuesOne[i+4];
-            data += valuesOne[i+5];
-            data += valuesOne[i+6];
-            data += valuesOne[i+7];
-
-            data += valuesTwo[i+0];
-            data += valuesTwo[i+1];
-            data += valuesTwo[i+2];
-            data += valuesTwo[i+3];
-            data += valuesTwo[i+4];
-            data += valuesTwo[i+5];
-            data += valuesTwo[i+6];
-            data += valuesTwo[i+7];
-        }
+        dataOutput = DataOperator.mergeData(dataOne, dataTwo);
 
 //        if (valuesOne.length != valuesTwo.length)
-//            data += valuesOne[valuesOne.length];
+//            dataOutput += valuesOne[valuesOne.length];
 
-        System.out.println("Dane po operacji łączenia: " + data + " ,rozmiar danych: " + data.length());
+        System.out.println("Dane po operacji łączenia: " + dataOutput + " ,rozmiar danych: " + dataOutput.length());
     }
 
-    public String getData() {
-        return data;
+    public String getDataOutput() {
+        return dataOutput;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setDataOutput(String dataOutput) {
+        this.dataOutput = dataOutput;
     }
 
     public String getDataOne() {
@@ -261,11 +216,11 @@ public class FileOpener {
         this.dataTwo = dataTwo;
     }
 
-    public String getBit() {
-        return bit;
+    public String getParityBits() {
+        return parityBits;
     }
 
-    public void setBit(String bit) {
-        this.bit = bit;
+    public void setParityBits(String parityBits) {
+        this.parityBits = parityBits;
     }
 }
