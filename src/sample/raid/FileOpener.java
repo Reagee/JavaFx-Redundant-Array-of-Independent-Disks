@@ -6,11 +6,11 @@ import java.nio.file.Paths;
 
 public class FileOpener {
 
-    private String data;
+    private String input = "1001001010101100";
     private String dataOne;
     private String dataTwo;
-    private String bit;
-    private String input = "1001001010101100";
+    private String parityBits;
+    private String dataOutput;
 
     public FileOpener() {
         save(input);
@@ -51,7 +51,7 @@ public class FileOpener {
 
             dataOne = inDataOne.readLine();
             dataTwo = inDataTwo.readLine();
-            bit = bits.readLine();
+            parityBits = bits.readLine();
 
             merge(dataOne, dataTwo);
 
@@ -115,11 +115,8 @@ public class FileOpener {
             char[] inputArr = data.toCharArray();
 
             BufferedWriter outDataOneFile = new BufferedWriter(new FileWriter(fileOnePath));
-            System.out.println("Zapisano plik: " + fileOnePath);
             BufferedWriter outDataTwoFile = new BufferedWriter(new FileWriter(fileTwoPath));
-            System.out.println("Zapisano plik: " + fileTwoPath);
             BufferedWriter outParityBitFile = new BufferedWriter(new FileWriter(bitFilePath));
-            System.out.println("Zapisano plik: " + bitFilePath);
 
             for (int i = 0; i < inputArr.length / 16; i++) {
                 int j;
@@ -131,7 +128,6 @@ public class FileOpener {
                 }
                 for(j = 8; j < 16; j++)
                     outDataTwoFile.write(inputArr[i * 16 + j]);
-
             }
 
 //            if (inputArr.length % 16 != 0)
@@ -141,6 +137,10 @@ public class FileOpener {
             outDataTwoFile.close();
             outParityBitFile.close();
 
+            System.out.println("Zapisano plik: " + fileOnePath);
+            System.out.println("Zapisano plik: " + fileTwoPath);
+            System.out.println("Zapisano plik: " + bitFilePath);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -148,7 +148,7 @@ public class FileOpener {
         }
     }
 
-    public void generateResult(String input, String discOne, String discTwo, String bits, String errors) {
+    public void generateResult(String input, String discOne, String discTwo, String parityBits, String errors) {
 
         String user = System.getProperty("user.name");
         String absPath = "C:/Users/" + user + "/Desktop/RAID";
@@ -165,9 +165,9 @@ public class FileOpener {
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(filePath));
             //mergeData
-            out.write("Wejście: " + input + "    Dysk nr.1: " + dataOne + "    Dysk nr.2: " + dataTwo + "\r\n");
-            out.write("Wyjście: " + data + "    Dysk nr.2: " + discOne + "    Dysk nr.2: " + discTwo + "\r\n");
-            out.write("Bity parzystości: " + bits + "\r\n");
+            out.write("Wejście:   Dane startowe: " + input + "\r\n");
+            out.write("RAID 3:    Dysk nr.1: " + discOne + "    Dysk nr.2: " + discTwo + "    Bity parzystości: " + parityBits + "\r\n");
+            out.write("Wyjście:   Dane po połączeniu: " + dataOutput + "\r\n");
 
             if (!dataOne.equals(discOne) && !dataTwo.equals(discTwo))
                 out.write(errors + " uszkodzony dysk nr.1 oraz nr.2");
@@ -184,30 +184,20 @@ public class FileOpener {
     }
 
     private void merge(String dataOne, String dataTwo) {
-        char[] valuesOne = dataOne.toCharArray();
-        char[] valuesTwo = dataTwo.toCharArray();
-
-        data = "";
-
-        for (int i = 0; i < valuesOne.length/8; i++) {
-            for(int j = 0; j < 8; j++)
-                data += valuesOne[i+j];
-            for(int j = 0; j < 8; j++)
-                data += valuesTwo[i+j];
-        }
+        dataOutput = DataOperator.mergeData(dataOne, dataTwo);
 
 //        if (valuesOne.length != valuesTwo.length)
-//            data += valuesOne[valuesOne.length];
+//            dataOutput += valuesOne[valuesOne.length];
 
-        System.out.println("Dane po operacji łączenia: " + data + " ,rozmiar danych: " + data.length());
+        System.out.println("Dane po operacji łączenia: " + dataOutput + " ,rozmiar danych: " + dataOutput.length());
     }
 
-    public String getData() {
-        return data;
+    public String getDataOutput() {
+        return dataOutput;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setDataOutput(String dataOutput) {
+        this.dataOutput = dataOutput;
     }
 
     public String getDataOne() {
@@ -226,11 +216,11 @@ public class FileOpener {
         this.dataTwo = dataTwo;
     }
 
-    public String getBit() {
-        return bit;
+    public String getParityBits() {
+        return parityBits;
     }
 
-    public void setBit(String bit) {
-        this.bit = bit;
+    public void setParityBits(String parityBits) {
+        this.parityBits = parityBits;
     }
 }

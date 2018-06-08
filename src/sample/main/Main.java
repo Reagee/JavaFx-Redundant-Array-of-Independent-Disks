@@ -50,8 +50,8 @@ public class Main extends Application {
 
     public Main(){
         FileOpener fileOpener = new FileOpener();
-        input.setText(fileOpener.getData());
-        parityBits.setText(fileOpener.getBit());
+        input.setText(fileOpener.getDataOutput());
+        parityBits.setText(fileOpener.getParityBits());
 
         changeMultipleBits.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -65,7 +65,7 @@ public class Main extends Application {
             public void handle(ActionEvent event) {
                 input.setEditable(false);
                 if(!checkInputData()){
-                    input.setText(fileOpener.getData());
+                    input.setText(fileOpener.getDataOutput());
                     outputMerged.setText("Podaj tylko bity");
                 }
                 else {
@@ -107,13 +107,13 @@ public class Main extends Application {
                 if(checkInputData()){
                     fileOpener.readData();
 
-                    input.setText(fileOpener.getData());
+                    input.setText(fileOpener.getDataOutput());
                     matrixOne.setText(fileOpener.getDataOne());
                     matrixTwo.setText(fileOpener.getDataTwo());
-                    parityBits.setText(fileOpener.getBit());
-                    outputMerged.setText(fileOpener.getData());
+                    parityBits.setText(fileOpener.getParityBits());
+                    outputMerged.setText(fileOpener.getDataOutput());
                 }else{
-                    input.setText(fileOpener.getData());
+                    input.setText(fileOpener.getDataOutput());
                     outputMerged.setText("Podaj tylko bity");
                 }
             }
