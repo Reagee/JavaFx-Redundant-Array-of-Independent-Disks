@@ -20,9 +20,9 @@ public class FileOpener {
     public void readData() {
         String user = System.getProperty("user.name");
         String absPath = "C:/Users/" + user + "/Desktop/Raid";
-        String fileOnePath = absPath + "/DanePierwsze.txt";
-        String fileTwoPath = absPath + "/DaneDrugie.txt";
-        String bitFilePath = absPath + "/Bits.txt";
+        String fileOnePath = absPath + "/DyskPierwszy.txt";
+        String fileTwoPath = absPath + "/DyskDrugi.txt";
+        String bitFilePath = absPath + "/DyskZBitamiParzystosci.txt";
 
         if (!Files.exists(Paths.get(absPath))) {
             System.out.println("Nie można odnaleźć katalogu: " + absPath);
@@ -94,9 +94,9 @@ public class FileOpener {
     private void save(String data) {
         String user = System.getProperty("user.name");
         String absPath = "C:/Users/" + user + "/Desktop/Raid";
-        String fileOnePath = absPath + "/DanePierwsze.txt";
-        String fileTwoPath = absPath + "/DaneDrugie.txt";
-        String bitFilePath = absPath + "/Bits.txt";
+        String fileOnePath = absPath + "/DyskPierwszy.txt";
+        String fileTwoPath = absPath + "/DyskDrugi.txt";
+        String bitFilePath = absPath + "/DyskZBitamiParzystosci.txt";
 
         if (!Files.exists(Paths.get(absPath))) {
             createDir(absPath);
