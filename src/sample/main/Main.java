@@ -13,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import sample.raid.BitsManipulator;
+import sample.raid.DataOperator;
 import sample.raid.FileOpener;
 
 import java.util.Random;
@@ -30,13 +31,16 @@ public class Main extends Application {
     private Button reverseArr = new Button("Odwróć bity losowego dysku");
     private Button changeMultipleBits = new Button("Zmień kilka bitów");
     private Button generateReportToFile = new Button("Generuj raport do pliku");
-    private Button getFromFiles = new Button("Nadpisz dane gotowymi");
+    private Button getFromFiles = new Button("Wypełnij gotowymi danymi");
+    private Button confirmChanges = new Button("Zastosuj zmiany");
 
     private TextArea input = new TextArea("");
     private TextArea outputMerged = new TextArea("");
     private TextArea matrixOne = new TextArea("");
     private TextArea matrixTwo = new TextArea("");
     private TextArea parityBits = new TextArea("");
+
+    boolean randomBit = false, fewBits = false, reverse = false;
 
     private BitsManipulator errors = new BitsManipulator();
 
@@ -50,13 +54,14 @@ public class Main extends Application {
 
     public Main(){
         FileOpener fileOpener = new FileOpener();
-        input.setText(fileOpener.getDataOutput());
-        parityBits.setText(fileOpener.getParityBits());
 
         changeMultipleBits.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 input.setEditable(true);
+                fewBits = true;
+                randomBit = false;
+                reverse = false;
             }
         });
 
@@ -78,12 +83,18 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 input.setText(errors.changeRandomBit(input.getText()));
+                randomBit = true;
+                fewBits = false;
+                reverse = false;
             }
         });
 
         reverseArr.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                reverse = true;
+                fewBits = false;
+                randomBit = false;
                 Random gen = new Random();
                 int i = gen.nextInt(2)+1;
                 System.out.println(i);
@@ -116,6 +127,37 @@ public class Main extends Application {
                     input.setText(fileOpener.getDataOutput());
                     outputMerged.setText("Podaj tylko bity");
                 }
+            }
+        });
+
+        confirmChanges.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(fewBits || randomBit){
+                    DataOperator.overrideAllData(input.getText());
+                }
+                else if(reverse){
+                    DataOperator.overideOutputData(input.getText(),matrixOne.getText(),matrixTwo.getText());
+                }
+                if(DataOperator.isDataFlag() && (fewBits || randomBit)) {
+                    matrixOne.setText(DataOperator.getDataOne());
+                    matrixTwo.setText(DataOperator.getDataTwo());
+                    parityBits.setText(DataOperator.getParityBits());
+                    outputMerged.setText(DataOperator.getDataOutput());
+                }
+                else if(DataOperator.isDataFlag() && reverse){
+                    parityBits.setText(DataOperator.getParityBits());
+                    outputMerged.setText(DataOperator.getDataOutput());
+
+                }
+                else{
+                    input.setText(DataOperator.getInput());
+                    matrixOne.setText("");
+                    matrixTwo.setText("");
+                    parityBits.setText("");
+                    outputMerged.setText("");
+                }
+                DataOperator.resetValues();
             }
         });
     }
@@ -155,12 +197,15 @@ public class Main extends Application {
         generateReportToFile.setPrefHeight(30);
         getFromFiles.setPrefWidth(400);
         getFromFiles.setPrefHeight(30);
+        confirmChanges.setPrefWidth(400);
+        confirmChanges.setPrefHeight(30);
 
         changeRandomBit.setFont(Font.font("Arial",15));
         reverseArr.setFont(Font.font("Arial",15));
         changeMultipleBits.setFont(Font.font("Arial",15));
         generateReportToFile.setFont(Font.font("Arial",15));
         getFromFiles.setFont(Font.font("Arial",15));
+        confirmChanges.setFont(Font.font("Arial",15));
 
         primaryStage.setTitle("RAID");
         GridPane raid = new GridPane();
@@ -185,6 +230,7 @@ public class Main extends Application {
         raid.add(changeMultipleBits,1,10);
         raid.add(generateReportToFile,2,10);
         raid.add(getFromFiles,3,9);
+        raid.add(confirmChanges,3,10);
 
         Scene scene = new Scene(raid,1200,420);
         primaryStage.setScene(scene);

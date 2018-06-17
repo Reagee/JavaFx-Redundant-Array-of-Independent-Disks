@@ -91,7 +91,7 @@ public class FileOpener {
         else return '1';
     }
 
-    private void save(String data) {
+    public void save(String data) {
         String user = System.getProperty("user.name");
         String absPath = "C:/Users/" + user + "/Desktop/Raid";
         String fileOnePath = absPath + "/DyskPierwszy.txt";
@@ -183,7 +183,7 @@ public class FileOpener {
         }
     }
 
-    private void merge(String dataOne, String dataTwo) {
+    public void merge(String dataOne, String dataTwo) {
         dataOutput = DataOperator.mergeData(dataOne, dataTwo);
 
 //        if (valuesOne.length != valuesTwo.length)

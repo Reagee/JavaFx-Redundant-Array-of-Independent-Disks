@@ -6,8 +6,9 @@ public class BitsManipulator {
 
     public String damagedBit = "Uszkodzone bity na pozycjach: ";
     private Random gen = new Random();
+    private boolean randomBitFlag = false;
 
-    private char xor(int a, int b) {
+    public static char xor(int a, int b) {
         if (a == b)
             return '0';
         else
@@ -16,16 +17,23 @@ public class BitsManipulator {
 
     public String changeRandomBit(String input) {
         String output = "";
-        char[] arr = input.toCharArray();
-        System.out.println(input);
-        int val = gen.nextInt(arr.length);
-        if (arr[val] == '1')
-            arr[val] = '0';
-        else
-            arr[val] = '1';
+        if((input==null || input.isEmpty() || input.equals(null)) && !randomBitFlag){
+            output += "Uzupełnij dane wejściowe";
+            randomBitFlag = false;
+        }
+        else {
+            randomBitFlag = true;
+            char[] arr = input.toCharArray();
+            System.out.println(input);
+            int val = gen.nextInt(arr.length);
+            if (arr[val] == '1')
+                arr[val] = '0';
+            else
+                arr[val] = '1';
 
-        for (int i = 0; i < arr.length; i++)
-            output += arr[i];
+            for (int i = 0; i < arr.length; i++)
+                output += arr[i];
+        }
         return output;
     }
 
