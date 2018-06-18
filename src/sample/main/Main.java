@@ -76,10 +76,14 @@ public class Main extends Application {
                 }
                 else {
                     if(!anotherDisc) {
+                        errors.check(outputData.getText(),parityBits.getText());
                         fileOpener.generateResult(input.getText(), matrixOne.getText(), matrixTwo.getText(), parityBits.getText(), errors.damagedBit);
+                        errors.damagedBit = "";
                     }
                     else{
+                        errors.check(outputData.getText(),parityBits.getText());
                         fileOpener4Discs.generateResultWithAdditionalDisc(input.getText(),matrixOne.getText(),matrixTwo.getText(),additionalDisc.getText(),parityBits.getText(),errors.damagedBit);
+                        errors.damagedBit = "";
                     }
                 }
             }

@@ -109,7 +109,7 @@ public class FileOpener4Discs {
                 char xorBit;
                 for(j = 0; j < 8; j++) {
                     outDataOneFile.write(inputArr[i * 24 + j]);
-                    xorBit = xor(inputArr[i * 24 + j], inputArr[i * 24 + 8 + j]);
+                    xorBit = BitsManipulator.xor(inputArr[i * 24 + j], inputArr[i * 24 + 8 + j], inputArr[i * 24 + 16 + j]);
                     outParityBitFile.write(xorBit);
                 }
                 for(j = 8; j < 16; j++)
@@ -203,11 +203,7 @@ public class FileOpener4Discs {
         }
     }
 
-    private char xor(int a, int b) {
-        if (a == b)
-            return '0';
-        else return '1';
-    }
+
 
     public String getInput() {
         return input;

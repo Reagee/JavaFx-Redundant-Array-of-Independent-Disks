@@ -61,7 +61,7 @@ public class BitsManipulator {
         char[] arr = output.toCharArray();
         char[] bitArr = bits.toCharArray();
 
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < bitArr.length; i++) {
             if (xor(arr[i * 2], arr[i * 2 + 1]) != bitArr[i]) {
                 val = false;
                 damagedBit += (i + 1) + " ";
@@ -79,5 +79,6 @@ public class BitsManipulator {
             damagedBit = "Brak uszkodzonych bitów";
         return val;
     }
+
 
 }
