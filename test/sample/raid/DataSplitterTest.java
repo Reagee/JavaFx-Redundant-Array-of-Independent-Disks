@@ -3,7 +3,6 @@ package sample.raid;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class DataSplitterTest {
     @Test
@@ -16,7 +15,7 @@ class DataSplitterTest {
         dataSplitter.splitInto3Discs(input);
 
         //THEN
-        Assertions.assertArrayEquals();
+        //Assertions.assertArrayEquals();
     }
 
     @Test
