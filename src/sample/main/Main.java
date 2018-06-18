@@ -12,9 +12,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import sample.raid.BitsManipulator;
-import sample.raid.DataOperator;
-import sample.raid.FileOpener;
+import sample.raid.*;
 
 import java.util.Random;
 
@@ -56,6 +54,7 @@ public class Main extends Application {
 
     public Main(){
         FileOpener fileOpener = new FileOpener();
+        FileOpener4Discs fileOpener4Discs = new FileOpener4Discs();
 
         changeMultipleBits.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -76,7 +75,12 @@ public class Main extends Application {
                     outputMerged.setText("Podaj tylko bity");
                 }
                 else {
-                    fileOpener.generateResult(input.getText(), matrixOne.getText(), matrixTwo.getText(), parityBits.getText(), errors.damagedBit);
+                    if(!anotherDisc) {
+                        fileOpener.generateResult(input.getText(), matrixOne.getText(), matrixTwo.getText(), parityBits.getText(), errors.damagedBit);
+                    }
+                    else{
+                        fileOpener4Discs.generateResultWithAdditionalDisc(input.getText(),matrixOne.getText(),matrixTwo.getText(),additionalDisc.getText(),parityBits.getText(),errors.damagedBit);
+                    }
                 }
             }
         });
@@ -147,14 +151,14 @@ public class Main extends Application {
                         outputMerged.setText(fileOpener.getDataOutput());
                     }
                     else{
-                        fileOpener.readDataWithAdditionalDisc();
+                        fileOpener4Discs.readDataWithAdditionalDisc();
 
-                        input.setText(fileOpener.getDataOutput());
-                        matrixOne.setText(fileOpener.getDataOne());
-                        matrixTwo.setText(fileOpener.getDataTwo());
-                        additionalDisc.setText(fileOpener.getDataThree());
-                        parityBits.setText(fileOpener.getParityBits());
-                        outputMerged.setText(fileOpener.getDataOutput());
+                        input.setText(fileOpener4Discs.getDataOutput());
+                        matrixOne.setText(fileOpener4Discs.getDataOne());
+                        matrixTwo.setText(fileOpener4Discs.getDataTwo());
+                        additionalDisc.setText(fileOpener4Discs.getDataThree());
+                        parityBits.setText(fileOpener4Discs.getParityBits());
+                        outputMerged.setText(fileOpener4Discs.getDataOutput());
                     }
                 }else{
                     input.setText(fileOpener.getDataOutput());
@@ -191,19 +195,19 @@ public class Main extends Application {
                 }
                 else{
                     if (fewBits || randomBit) {
-                        DataOperator.overrideAllData(input.getText());
+                        DataOperator4Discs.overrideAllDataWithAdditionalDisc(input.getText());
                     } else if (reverse) {
-                        DataOperator.overideOutputDataWithAdditionalDisc(input.getText(), matrixOne.getText(), matrixTwo.getText(),additionalDisc.getText());
+                        DataOperator4Discs.overideOutputDataWithAdditionalDisc(input.getText(), matrixOne.getText(), matrixTwo.getText(),additionalDisc.getText());
                     }
-                    if (DataOperator.isDataFlag() && (fewBits || randomBit)) {
-                        matrixOne.setText(DataOperator.getDataOne());
-                        matrixTwo.setText(DataOperator.getDataTwo());
-                        additionalDisc.setText(DataOperator.getDataThree());
-                        parityBits.setText(DataOperator.getParityBits());
-                        outputMerged.setText(DataOperator.getDataOutput());
-                    } else if (DataOperator.isDataFlag() && reverse) {
-                        parityBits.setText(DataOperator.getParityBits());
-                        outputMerged.setText(DataOperator.getDataOutput());
+                    if (DataOperator4Discs.isDataFlag() && (fewBits || randomBit)) {
+                        matrixOne.setText(DataOperator4Discs.getDataOne());
+                        matrixTwo.setText(DataOperator4Discs.getDataTwo());
+                        additionalDisc.setText(DataOperator4Discs.getDataThree());
+                        parityBits.setText(DataOperator4Discs.getParityBits());
+                        outputMerged.setText(DataOperator4Discs.getDataOutput());
+                    } else if (DataOperator4Discs.isDataFlag() && reverse) {
+                        parityBits.setText(DataOperator4Discs.getParityBits());
+                        outputMerged.setText(DataOperator4Discs.getDataOutput());
 
                     } else {
                         input.setText(DataOperator.getInput());
