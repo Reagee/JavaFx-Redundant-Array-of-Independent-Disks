@@ -150,7 +150,6 @@ public class FileOpener {
     }
 
     private char xor(int a, int b) {
-
         if (a == b)
             return '0';
         else return '1';
