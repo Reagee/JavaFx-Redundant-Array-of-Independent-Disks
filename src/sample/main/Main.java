@@ -33,14 +33,16 @@ public class Main extends Application {
     private Button generateReportToFile = new Button("Generuj raport do pliku");
     private Button getFromFiles = new Button("Wypełnij gotowymi danymi");
     private Button confirmChanges = new Button("Zastosuj zmiany");
+    private Button addNewDisc = new Button("Dodaj dysk");
 
     private TextArea input = new TextArea("");
     private TextArea outputMerged = new TextArea("");
     private TextArea matrixOne = new TextArea("");
     private TextArea matrixTwo = new TextArea("");
     private TextArea parityBits = new TextArea("");
+    private TextArea additionalDisc = new TextArea("");
 
-    boolean randomBit = false, fewBits = false, reverse = false;
+    boolean randomBit = false, fewBits = false, reverse = false, anotherDisc = false;
 
     private BitsManipulator errors = new BitsManipulator();
 
@@ -95,18 +97,37 @@ public class Main extends Application {
                 reverse = true;
                 fewBits = false;
                 randomBit = false;
-                Random gen = new Random();
-                int i = gen.nextInt(2)+1;
-                System.out.println(i);
-                if(i==1 && !matrixOne.getText().equals(null) && !matrixOne.getText().isEmpty())
-                    matrixOne.setText(errors.rotateArr(matrixOne.getText()));
-                else if(i==2 && !matrixTwo.getText().equals(null) && !matrixTwo.getText().isEmpty())
-                    matrixTwo.setText(errors.rotateArr(matrixTwo.getText()));
-                else if(i==1 && (matrixOne.getText().equals(null) || matrixOne.getText().isEmpty())){
-                    matrixOne.setText("Brak danych w dysku nr.1");
+                if (!anotherDisc) {
+                    Random gen = new Random();
+                    int i = gen.nextInt(2) + 1;
+                    System.out.println(i);
+                    if (i == 1 && !matrixOne.getText().equals(null) && !matrixOne.getText().isEmpty())
+                        matrixOne.setText(errors.rotateArr(matrixOne.getText()));
+                    else if (i == 2 && !matrixTwo.getText().equals(null) && !matrixTwo.getText().isEmpty())
+                        matrixTwo.setText(errors.rotateArr(matrixTwo.getText()));
+                    else if (i == 1 && (matrixOne.getText().equals(null) || matrixOne.getText().isEmpty())) {
+                        matrixOne.setText("Brak danych w dysku nr.1");
+                    } else if (i == 2 && (matrixTwo.getText().equals(null) || matrixTwo.getText().isEmpty())) {
+                        matrixTwo.setText("Brak danych w dysku nr.2");
+                    }
                 }
-                else if(i==2 && (matrixTwo.getText().equals(null) || matrixTwo.getText().isEmpty())){
-                    matrixTwo.setText("Brak danych w dysku nr.2");
+                else{
+                    Random gen = new Random();
+                    int i = gen.nextInt(3) + 1;
+                    System.out.println(i);
+                    if (i == 1 && !matrixOne.getText().equals(null) && !matrixOne.getText().isEmpty())
+                        matrixOne.setText(errors.rotateArr(matrixOne.getText()));
+                    else if (i == 2 && !matrixTwo.getText().equals(null) && !matrixTwo.getText().isEmpty())
+                        matrixTwo.setText(errors.rotateArr(matrixTwo.getText()));
+                    else if (i == 3 && !additionalDisc.getText().equals(null) && !additionalDisc.getText().isEmpty())
+                        additionalDisc.setText(errors.rotateArr(additionalDisc.getText()));
+                    else if (i == 1 && (matrixOne.getText().equals(null) || matrixOne.getText().isEmpty())) {
+                        matrixOne.setText("Brak danych w dysku nr.1");
+                    } else if (i == 2 && (matrixTwo.getText().equals(null) || matrixTwo.getText().isEmpty())) {
+                        matrixTwo.setText("Brak danych w dysku nr.2");
+                    } else if (i == 3 && (additionalDisc.getText().equals(null)) || additionalDisc.getText().isEmpty()){
+                        additionalDisc.setText("Brak danych na dodatkowym dysku nr.3");
+                    }
                 }
             }
         });
@@ -116,13 +137,25 @@ public class Main extends Application {
             public void handle(ActionEvent event) {
                 input.setEditable(false);
                 if(checkInputData()){
-                    fileOpener.readData();
+                    if(!anotherDisc) {
+                        fileOpener.readData();
 
-                    input.setText(fileOpener.getDataOutput());
-                    matrixOne.setText(fileOpener.getDataOne());
-                    matrixTwo.setText(fileOpener.getDataTwo());
-                    parityBits.setText(fileOpener.getParityBits());
-                    outputMerged.setText(fileOpener.getDataOutput());
+                        input.setText(fileOpener.getDataOutput());
+                        matrixOne.setText(fileOpener.getDataOne());
+                        matrixTwo.setText(fileOpener.getDataTwo());
+                        parityBits.setText(fileOpener.getParityBits());
+                        outputMerged.setText(fileOpener.getDataOutput());
+                    }
+                    else{
+                        fileOpener.readDataWithAdditionalDisc();
+
+                        input.setText(fileOpener.getDataOutput());
+                        matrixOne.setText(fileOpener.getDataOne());
+                        matrixTwo.setText(fileOpener.getDataTwo());
+                        additionalDisc.setText(fileOpener.getDataThree());
+                        parityBits.setText(fileOpener.getParityBits());
+                        outputMerged.setText(fileOpener.getDataOutput());
+                    }
                 }else{
                     input.setText(fileOpener.getDataOutput());
                     outputMerged.setText("Podaj tylko bity");
@@ -133,31 +166,71 @@ public class Main extends Application {
         confirmChanges.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(fewBits || randomBit){
-                    DataOperator.overrideAllData(input.getText());
-                }
-                else if(reverse){
-                    DataOperator.overideOutputData(input.getText(),matrixOne.getText(),matrixTwo.getText());
-                }
-                if(DataOperator.isDataFlag() && (fewBits || randomBit)) {
-                    matrixOne.setText(DataOperator.getDataOne());
-                    matrixTwo.setText(DataOperator.getDataTwo());
-                    parityBits.setText(DataOperator.getParityBits());
-                    outputMerged.setText(DataOperator.getDataOutput());
-                }
-                else if(DataOperator.isDataFlag() && reverse){
-                    parityBits.setText(DataOperator.getParityBits());
-                    outputMerged.setText(DataOperator.getDataOutput());
+                if(!anotherDisc) {
+                    if (fewBits || randomBit) {
+                        DataOperator.overrideAllData(input.getText());
+                    } else if (reverse) {
+                        DataOperator.overideOutputData(input.getText(), matrixOne.getText(), matrixTwo.getText());
+                    }
+                    if (DataOperator.isDataFlag() && (fewBits || randomBit)) {
+                        matrixOne.setText(DataOperator.getDataOne());
+                        matrixTwo.setText(DataOperator.getDataTwo());
+                        parityBits.setText(DataOperator.getParityBits());
+                        outputMerged.setText(DataOperator.getDataOutput());
+                    } else if (DataOperator.isDataFlag() && reverse) {
+                        parityBits.setText(DataOperator.getParityBits());
+                        outputMerged.setText(DataOperator.getDataOutput());
 
+                    } else {
+                        input.setText(DataOperator.getInput());
+                        matrixOne.setText("");
+                        matrixTwo.setText("");
+                        parityBits.setText("");
+                        outputMerged.setText("");
+                    }
                 }
                 else{
-                    input.setText(DataOperator.getInput());
-                    matrixOne.setText("");
-                    matrixTwo.setText("");
-                    parityBits.setText("");
-                    outputMerged.setText("");
+                    if (fewBits || randomBit) {
+                        DataOperator.overrideAllData(input.getText());
+                    } else if (reverse) {
+                        DataOperator.overideOutputDataWithAdditionalDisc(input.getText(), matrixOne.getText(), matrixTwo.getText(),additionalDisc.getText());
+                    }
+                    if (DataOperator.isDataFlag() && (fewBits || randomBit)) {
+                        matrixOne.setText(DataOperator.getDataOne());
+                        matrixTwo.setText(DataOperator.getDataTwo());
+                        additionalDisc.setText(DataOperator.getDataThree());
+                        parityBits.setText(DataOperator.getParityBits());
+                        outputMerged.setText(DataOperator.getDataOutput());
+                    } else if (DataOperator.isDataFlag() && reverse) {
+                        parityBits.setText(DataOperator.getParityBits());
+                        outputMerged.setText(DataOperator.getDataOutput());
+
+                    } else {
+                        input.setText(DataOperator.getInput());
+                        matrixOne.setText("");
+                        matrixTwo.setText("");
+                        additionalDisc.setText("");
+                        parityBits.setText("");
+                        outputMerged.setText("");
+                    }
                 }
                 DataOperator.resetValues();
+            }
+        });
+
+        addNewDisc.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(!anotherDisc){
+                    anotherDisc = true;
+                    additionalDisc.setVisible(true);
+                    addNewDisc.setText("Usuń dodatkowy dysk");
+                }
+                else{
+                    anotherDisc = false;
+                    additionalDisc.setVisible(false);
+                    addNewDisc.setText("Dodaj dysk");
+                }
             }
         });
     }
@@ -175,6 +248,7 @@ public class Main extends Application {
         outputData.setFont(Font.font("Arial",15));
         singleData.setFont(Font.font("Arial",15));
         parityBit.setFont(Font.font("Arial",15));
+        additionalDisc.setFont(Font.font("Arial",15));
 
         input.setEditable(false);
         input.setPrefRowCount(3);
@@ -186,6 +260,9 @@ public class Main extends Application {
         matrixTwo.setPrefRowCount(1);
         parityBits.setEditable(false);
         parityBits.setPrefRowCount(1);
+        additionalDisc.setEditable(false);
+        additionalDisc.setPrefRowCount(1);
+        additionalDisc.setVisible(false);
 
         changeRandomBit.setPrefWidth(400);
         changeRandomBit.setPrefHeight(30);
@@ -199,6 +276,8 @@ public class Main extends Application {
         getFromFiles.setPrefHeight(30);
         confirmChanges.setPrefWidth(400);
         confirmChanges.setPrefHeight(30);
+        addNewDisc.setPrefWidth(400);
+        addNewDisc.setPrefHeight(30);
 
         changeRandomBit.setFont(Font.font("Arial",15));
         reverseArr.setFont(Font.font("Arial",15));
@@ -206,6 +285,7 @@ public class Main extends Application {
         generateReportToFile.setFont(Font.font("Arial",15));
         getFromFiles.setFont(Font.font("Arial",15));
         confirmChanges.setFont(Font.font("Arial",15));
+        addNewDisc.setFont(Font.font("Arial",15));
 
         primaryStage.setTitle("RAID");
         GridPane raid = new GridPane();
@@ -224,13 +304,14 @@ public class Main extends Application {
         raid.add(matrixTwo,1,8);
         raid.add(parityBit,2,6);
         raid.add(parityBits,2,7);
-
-        raid.add(changeRandomBit,1,9);
-        raid.add(reverseArr,2,9);
-        raid.add(changeMultipleBits,1,10);
-        raid.add(generateReportToFile,2,10);
-        raid.add(getFromFiles,3,9);
-        raid.add(confirmChanges,3,10);
+        raid.add(additionalDisc,1,9);
+        raid.add(changeRandomBit,1,10);
+        raid.add(reverseArr,2,10);
+        raid.add(changeMultipleBits,3,10);
+        raid.add(generateReportToFile,1,11);
+        raid.add(getFromFiles,2,11);
+        raid.add(confirmChanges,3,11);
+        raid.add(addNewDisc,4,10);
 
         Scene scene = new Scene(raid,1200,420);
         primaryStage.setScene(scene);
