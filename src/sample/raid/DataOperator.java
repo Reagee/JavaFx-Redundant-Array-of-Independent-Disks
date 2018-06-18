@@ -46,6 +46,7 @@ public class DataOperator {
 
     }
 
+    
     public static void overrideAllData(String in){
         if((in==null || in.isEmpty() || in.equals(null)) && !dataFlag){
             input = "Niepoprawne dane";
