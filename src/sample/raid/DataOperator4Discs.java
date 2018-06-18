@@ -44,7 +44,7 @@ public class DataOperator4Discs {
                 char xorBit;
                 for (j = 0; j < 8; j++) {
                     dataOne += (inputArray[i * 24 + j]);
-                    xorBit = BitsManipulator.xor(inputArray[i * 24 + j], inputArray[i * 24 + 8 + j]);
+                    xorBit = BitsManipulator.xor(inputArray[i * 24 + j], inputArray[i * 24 + 8 + j], inputArray[i * 24 + 16 + j]);
                     parityBits += (xorBit);
                 }
                 for (j = 8; j < 16; j++)
@@ -71,7 +71,7 @@ public class DataOperator4Discs {
                 int j;
                 char xorBit;
                 for (j = 0; j < 8; j++) {
-                    xorBit = BitsManipulator.xor(inputArray[i * 24 + j], inputArray[i * 24 + 8 + j]);
+                    xorBit = BitsManipulator.xor(inputArray[i * 24 + j], inputArray[i * 24 + 8 + j], inputArray[i * 24 + 16 + j]);
                     parityBits += (xorBit);
                 }
             }

@@ -15,6 +15,10 @@ public class BitsManipulator {
             return '1';
     }
 
+    public static char xor(int a, int b, int c) {
+        return xor(xor(a,b), c);
+    }
+
     public String changeRandomBit(String input) {
         String output = "";
         if((input==null || input.isEmpty() || input.equals(null)) && !randomBitFlag){
