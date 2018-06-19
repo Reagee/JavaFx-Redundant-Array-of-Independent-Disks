@@ -55,6 +55,7 @@ public class DataOperator {
 
 
 
+
     public static void overideOutputData(String in, String dataOne, String dataTwo){
         if((in==null || in.isEmpty() || in.equals(null) || dataOne==null || dataOne.isEmpty() || dataTwo==null || dataTwo.isEmpty()) && !dataFlag){
             input = "Niepoprawne dane";

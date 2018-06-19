@@ -70,6 +70,7 @@ public class Main extends Application {
             }
         });
 
+
         generateReportToFile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

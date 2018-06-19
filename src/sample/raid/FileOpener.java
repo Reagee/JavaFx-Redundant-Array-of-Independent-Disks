@@ -17,6 +17,7 @@ public class FileOpener {
         save(input);
     }
 
+
     public void readData() {
         String user = System.getProperty("user.name");
         String absPath = "C:/Users/" + user + "/Desktop/Raid";

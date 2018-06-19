@@ -99,6 +99,7 @@ public class FileOpener4Discs {
         try {
             char[] inputArr = data.toCharArray();
 
+
             BufferedWriter outDataOneFile = new BufferedWriter(new FileWriter(fileOnePath));
             BufferedWriter outDataTwoFile = new BufferedWriter(new FileWriter(fileTwoPath));
             BufferedWriter outDataThreeFile = new BufferedWriter(new FileWriter(fileThreePath));

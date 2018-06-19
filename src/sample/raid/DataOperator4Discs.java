@@ -14,6 +14,7 @@ public class DataOperator4Discs {
         char[] valuesTwo = dataTwo.toCharArray();
         char[] valuesThree = dataThree.toCharArray();
 
+        
         String dataOutput = "";
 
         for (int i = 0; i < valuesOne.length/8; i++) {

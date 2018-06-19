@@ -62,6 +62,7 @@ public class BitsManipulator {
         char[] arr = output.toCharArray();
         char[] bitArr = bits.toCharArray();
 
+
         for (int i = 0; i < bitArr.length; i++) {
             if (xor(output.charAt(i*2), output.charAt((i*2+1))) != bits.charAt(i)) {
                 val = false;
