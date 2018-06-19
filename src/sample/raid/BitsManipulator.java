@@ -15,6 +15,7 @@ public class BitsManipulator {
             return '1';
     }
 
+
     public static char xor(int a, int b, int c) {
         return xor(xor(a,b), c);
     }
@@ -62,7 +63,7 @@ public class BitsManipulator {
         char[] bitArr = bits.toCharArray();
 
         for (int i = 0; i < bitArr.length; i++) {
-            if (xor(arr[i * 2], arr[i * 2 + 1]) != bitArr[i]) {
+            if (xor(output.charAt(i*2), output.charAt((i*2+1))) != bits.charAt(i)) {
                 val = false;
                 damagedBit += (i + 1) + " ";
                 flag = true;
@@ -77,6 +78,7 @@ public class BitsManipulator {
         }
         if (!flag)
             damagedBit = "Brak uszkodzonych bitów";
+        System.out.println(damagedBit);
         return val;
     }
 

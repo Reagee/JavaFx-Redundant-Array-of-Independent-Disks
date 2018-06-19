@@ -76,7 +76,14 @@ public class DataOperator4Discs {
             }
         }
     }
-
+    public static void resetValues(){
+        input="";
+        dataOne="";
+        dataTwo="";
+        parityBits="";
+        dataOutput="";
+        dataFlag = false;
+    }
     public static String getInput() {
         return input;
     }
